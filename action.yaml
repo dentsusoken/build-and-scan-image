@@ -1,5 +1,5 @@
 name: Build and Scan Image
-description: "Build and scan Dockerfile and container image by hadolint, dockle, trivy, docker scan"
+description: Build and scan Dockerfile and container image by hadolint, dockle, trivy, docker scan
 branding:
   icon: box
   color: blue
@@ -48,7 +48,7 @@ inputs:
     required: false
     default: "0.18.3"
   trivy-severity:
-    description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable values are some of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
+    description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
     required: false
     default: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
   trivy-vuln-type:
@@ -64,11 +64,11 @@ inputs:
     required: false
     default: "0.8.0"
   docker-scan-severity:
-    description: Fail step if image has vulnerabilities with a severity above this level exist. Acceptable value is one of (low|medium|high). (default "low")
+    description: Fail step if image has vulnerabilities with a severity above this level. Acceptable value is one of (low|medium|high). (default "low")
     required: false
     default: low
   docker-scan-snyk-token:
-    description: Snyk API Token. This is necessary if "docker-scan-snyk-token" is "true". (default "")
+    description: Snyk API Token. This is necessary if "docker-scan-enable" is "true". (default "")
     required: false
     default: ""
 runs:
