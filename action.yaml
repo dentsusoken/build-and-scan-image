@@ -1,0 +1,151 @@
+name: Build and Scan Image
+description: Build and scan Dockerfile and container image by hadolint, dockle, trivy, docker scan
+branding:
+  icon: box
+  color: blue
+inputs:
+  tag:
+    description: Image name and optionally tag in "name:tag" format
+    required: true
+  path:
+    description: Path to base directory to run `docker build` command (default ".")
+    required: false
+    default: "."
+  dockerfile:
+    description: Path to Dockerfile, which is relative path from "path" parameter (default "Dockerfile")
+    required: false
+    default: Dockerfile
+  hadolint-enable:
+    description: Enable scanning Dockerfile by hadolint (default "true")
+    required: false
+    default: "true"
+  hadolint-version:
+    description: Hadolint version (default "2.5.0")
+    required: false
+    default: "2.5.0"
+  hadolint-severity:
+    description: Fail step if rules with a severity above this level are violated. Acceptable value is one of (error|warning|info|style|ignore|none). (default "info")
+    required: false
+    default: info
+  dockle-enable:
+    description: Enable scanning image by dockle (default "true")
+    required: false
+    default: "true"
+  dockle-version:
+    description: Dockle version (default "0.3.15")
+    required: false
+    default: "0.3.15"
+  dockle-severity:
+    description: Fail step if checkpoints with a severity above this level are violated. Acceptable value is one of (INFO|WARN|FATAL). (default "WARN")
+    required: false
+    default: WARN
+  trivy-enable:
+    description: Enable scanning image by trivy (default "true")
+    required: false
+    default: "true"
+  trivy-version:
+    description: Trivy version (default "0.18.3")
+    required: false
+    default: "0.18.3"
+  trivy-severity:
+    description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
+    required: false
+    default: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+  trivy-vuln-type:
+    description: Vulnerability types which trivy detect to. If you use this action for commercial usage, you MUST set this option as "os" and use trivy without non-commercial data sources. Acceptable value is comma-separated list of (os|library). (default "os")
+    required: false
+    default: os
+  docker-scan-enable:
+    description: Enable scanning image by docker scan. If enabled, "docker-scan-snyk-token" must be also set. (default "false")
+    required: false
+    default: "false"
+  docker-scan-version:
+    description: Docker scan version (default "0.8.0")
+    required: false
+    default: "0.8.0"
+  docker-scan-severity:
+    description: Fail step if image has vulnerabilities with a severity above this level. Acceptable value is one of (low|medium|high). (default "low")
+    required: false
+    default: low
+  docker-scan-snyk-token:
+    description: Snyk API Token. This is necessary if "docker-scan-enable" is "true". (default "")
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps: 
+  - name: Scan Dockerfile by hadolint
+    run: |
+      if [ "${{ inputs.hadolint-enable }}" == "true" ]; then
+        echo "::group::Scan Dockerfile by hadolint"
+
+        # Install hadolint
+        curl -sL https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-Linux-x86_64 -o /tmp/hadolint
+        chmod +x /tmp/hadolint
+        sudo mv /tmp/hadolint /usr/local/bin/
+
+        # Scan Dockerfile by hadolint
+        hadolint --failure-threshold "${{ inputs.hadolint-severity}}" "${{ inputs.path }}/${{ inputs.dockerfile }}"
+
+        echo "::endgroup::"
+      fi
+    shell: bash
+  - name: Build image
+    run: |
+      echo "::group::Build image"
+      docker build -t "${{ inputs.tag }}" -f "${{ inputs.path }}/${{ inputs.dockerfile }}" "${{ inputs.path }}"
+      echo "::endgroup::"
+    shell: bash
+  - name: Scan image by dockle
+    run: |
+      if [ "${{ inputs.dockle-enable }}" == "true" ]; then
+        echo "::group::Scan image by dockle"
+
+        # Install dockle
+        curl -sL https://github.com/goodwithtech/dockle/releases/download/v${{ inputs.dockle-version }}/dockle_${{ inputs.dockle-version }}_Linux-64bit.tar.gz -o /tmp/dockle.tar.gz
+        tar zxf /tmp/dockle.tar.gz -C /tmp
+        sudo mv /tmp/dockle /usr/local/bin/
+
+        # Scan image by dockle
+        dockle --exit-code 1 --exit-level "${{ inputs.dockle-severity }}" "${{ inputs.tag }}"
+
+        echo "::endgroup::"
+      fi
+    shell: bash
+  - name: Scan image by trivy
+    run: |
+      if [ "${{ inputs.trivy-enable }}" == "true" ]; then
+        echo "::group::Scan image by trivy"
+
+        # Install trivy
+        curl -sL https://github.com/aquasecurity/trivy/releases/download/v${{ inputs.trivy-version }}/trivy_${{ inputs.trivy-version }}_Linux-64bit.tar.gz -o /tmp/trivy.tar.gz
+        tar zxf /tmp/trivy.tar.gz -C /tmp
+        sudo mv /tmp/trivy /usr/local/bin/
+
+        # Scan image by dockle
+        trivy image --exit-code 1 --severity "${{ inputs.trivy-severity }}" --no-progress --vuln-type "${{ inputs.trivy-vuln-type }}" "${{ inputs.tag }}"
+
+        echo "::endgroup::"
+      fi
+    shell: bash
+  - name: Scan image by docker scan
+    run: |
+      if [ "${{ inputs.docker-scan-enable }}" == "true" ]; then
+        echo "::group::Scan image by docker scan"
+
+        # Install docker scan
+        mkdir -p ${HOME}/.docker/cli-plugins
+        curl -sL https://github.com/docker/scan-cli-plugin/releases/download/v${{ inputs.docker-scan-version }}/docker-scan_linux_amd64 -o ${HOME}/.docker/cli-plugins/docker-scan
+        chmod +x ${HOME}/.docker/cli-plugins/docker-scan
+
+        # Scan image by docker scan
+        if [ "${{ inputs.docker-scan-snyk-token }}" == "" ]; then
+          echo "'docker-scan-snyk-token' is necessary if 'docker-scan-enable' is 'true'"
+          exit 1
+        fi
+        docker scan --accept-license --login --token "${{ inputs.docker-scan-snyk-token }}"
+        docker scan --accept-license --file "${{ inputs.path }}/${{ inputs.dockerfile }}" --severity "${{ inputs.docker-scan-severity }}" "${{ inputs.tag }}"
+
+        echo "::endgroup::"
+      fi
+    shell: bash
