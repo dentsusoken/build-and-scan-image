@@ -1,0 +1,14 @@
+name: test
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Make sure build-and-scan-image action work correctly
+        uses: ./
+        with:
+          path: ./testdata
+          tag: testdata:${{ github.sha }}
+          docker-scan-enable: true
+          docker-scan-snyk-token: ${{ secrets.SNYK_TOKEN }}

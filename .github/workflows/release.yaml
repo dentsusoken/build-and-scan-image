@@ -1,0 +1,20 @@
+name: release
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT_TAG=$(git tag --sort=-creatordate | sed -n 1p)
+          PREVIOUS_TAG=$(git tag --sort=-creatordate | sed -n 2p)
+          RELEASE_NOTE=$(git log --oneline --pretty=format:"* %h %s" ${PREVIOUS_TAG}..${CURRENT_TAG})
+          gh api -X POST repos/${{ github.repository }}/releases -F accept="application/vnd.github.v3+json" -F tag_name="${CURRENT_TAG}" -F name="${CURRENT_TAG}" -F body="${RELEASE_NOTE}"
