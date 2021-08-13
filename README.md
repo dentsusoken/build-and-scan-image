@@ -11,7 +11,24 @@ Build and scan Dockerfile and container image by following tools.
 
 ## Usage
 
-### Basic
+### Basic (using deploy key)
+
+```yaml
+- uses: actions/checkout@v2  # Checkout your repository which contains Dockerfile.
+- uses: actions/checkout@v2  # Checkout this repository.
+  with:
+    repository: ISID/build-and-scan-image
+    ssh-key: ${{ secrets.GH_DEPLOY_KEY }}  # GH_DEPLOY_KEY is a secret that contains deploy key for this repository
+    path: ./build-and-scan-image
+- name: Build and scan image  # Build and scan Dockerfile and container image
+  uses: ./build-and-scan-image
+  with:
+    tag: "YOUT_IMAGE_NAME:TAG"
+```
+
+Please ask administrator of this repository to get deploy key.
+
+### Basic (using personal access token)
 
 ```yaml
 - uses: actions/checkout@v2  # Checkout your repository which contains Dockerfile.
