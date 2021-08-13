@@ -79,6 +79,9 @@ See [action.yaml](./action.yaml) .
     # If you use this action for commercial usage, you MUST set this option as "os" and use trivy without non-commercial data sources.
     trivy-vuln-type: os
 
+    # Ignore unfixed vulnerabilities (default "false")
+    trivy-ignore-unfixed: "false"
+
     # Enable scanning image by docker scan (default "false")
     # If enabled, "docker-scan-snyk-token" must be also set. 
     docker-scan-enable: "false"
