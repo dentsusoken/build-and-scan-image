@@ -55,6 +55,10 @@ inputs:
     description: Vulnerability types which trivy detect to. If you use this action for commercial usage, you MUST set this option as "os" and use trivy without non-commercial data sources. Acceptable value is comma-separated list of (os|library). (default "os")
     required: false
     default: os
+  trivy-ignore-unfixed:
+    description: Ignore unfixed vulnerabilities (default "false")
+    required: false
+    default: "false"
   docker-scan-enable:
     description: Enable scanning image by docker scan. If enabled, "docker-scan-snyk-token" must be also set. (default "false")
     required: false
@@ -73,7 +77,7 @@ inputs:
     default: ""
 runs:
   using: composite
-  steps: 
+  steps:
   - name: Scan Dockerfile by hadolint
     run: |
       if [ "${{ inputs.hadolint-enable }}" == "true" ]; then
@@ -123,7 +127,7 @@ runs:
         sudo mv /tmp/trivy /usr/local/bin/
 
         # Scan image by dockle
-        trivy image --exit-code 1 --severity "${{ inputs.trivy-severity }}" --no-progress --vuln-type "${{ inputs.trivy-vuln-type }}" "${{ inputs.tag }}"
+        trivy image --exit-code 1 --severity "${{ inputs.trivy-severity }}" --no-progress --vuln-type "${{ inputs.trivy-vuln-type }}" --ignore-unfixed="${{ inputs.trivy-ignore-unfixed }}" "${{ inputs.tag }}"
 
         echo "::endgroup::"
       fi
