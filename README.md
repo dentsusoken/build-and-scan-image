@@ -16,9 +16,9 @@ Build and scan Dockerfile and container image by following tools.
 This repository is experimental. Some options or behavior may be changed without announcement.
 
 ### Responsibility
-This repository is provided by MIT License. Please see [LICENSE](./LICENSE) for more details.
+This repository is provided by [MIT License](./LICENSE).
 
-You, including projects in ISID, must take all responsibility caused by using this action.
+You, including ISID members, must take all responsibility caused by using this action.
 
 Especially, this action uses some forementioned tools and service internally. You must understand it and take all responsibility about it too.
 
