@@ -8,6 +8,7 @@ Build and scan Dockerfile and container image by following tools.
 - [dockle](https://github.com/goodwithtech/dockle)
 - [trivy](https://github.com/aquasecurity/trivy)
 - [docker scan](https://github.com/docker/scan-cli-plugin) (option)
+    - This use [Snyk](https://snyk.io/) internally.
 
 ## Note
 
@@ -19,7 +20,7 @@ This repository is provided by MIT License. Please see [LICENSE](./LICENSE) for 
 
 You, including projects in ISID, must take all responsibility caused by using this action.
 
-Especially, this action uses some forementioned tools internally. You must understand it and take all responsibility about it too.
+Especially, this action uses some forementioned tools and service internally. You must understand it and take all responsibility about it too.
 
 ### Commercial usage
 Some of trivy's data sources, especially for programing language, are only licensed for non-commercial usage. See following sites for more details.
