@@ -10,7 +10,7 @@ Build and scan Dockerfile and container image by following tools.
 - [docker scan](https://github.com/docker/scan-cli-plugin) (option)
     - This use [Snyk](https://snyk.io/) internally.
 
-## Note
+## Notes
 
 ### Experimental
 This repository is experimental. Some options or behavior may be changed without announcement.
@@ -29,6 +29,9 @@ Some of trivy's data sources, especially for programing language, are only licen
 - https://github.com/aquasecurity/trivy/issues/491
 
 If you use this action for commercial usage, you MUST set `trivy-vuln-type` option as `os` and use trivy without non-commercial data sources.
+
+### For ISID members
+If you are ISID member, please read [ISID/build-and-scan-image-internal](https://github.com/ISID/build-and-scan-image-internal) too. It can be accessed by only ISID members.
 
 ## Usage
 
