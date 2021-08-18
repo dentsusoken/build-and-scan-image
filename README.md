@@ -15,13 +15,6 @@ Build and scan Dockerfile and container image by following tools.
 ### Experimental
 This repository is experimental. Some options or behavior may be changed without announcement.
 
-### Responsibility
-This repository is provided by [MIT License](./LICENSE).
-
-You, including ISID members, must take all responsibility caused by using this action.
-
-Especially, this action uses some forementioned tools and service internally. You must understand it and take all responsibility about it too.
-
 ### Commercial usage
 Some of trivy's data sources, especially for programing language, are only licensed for non-commercial usage. See following sites for more details.
 
@@ -30,8 +23,8 @@ Some of trivy's data sources, especially for programing language, are only licen
 
 If you use this action for commercial usage, you MUST set `trivy-vuln-type` option as `os` and use trivy without non-commercial data sources.
 
-### For ISID members
-If you are ISID member, please read [ISID/build-and-scan-image-internal](https://github.com/ISID/build-and-scan-image-internal) too. It can be accessed by only ISID members.
+### Use in ISID project
+If you use this repository in ISID project, please read [ISID/build-and-scan-image-internal](https://github.com/ISID/build-and-scan-image-internal) too. It can be accessed by only ISID members.
 
 ## Usage
 
