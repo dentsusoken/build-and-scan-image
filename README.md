@@ -32,7 +32,7 @@ If you use this repository in ISID project, please read [ISID/build-and-scan-ima
 
 ```yaml
 - name: Build and scan image
-  uses: ISID/build-and-scan-image
+  uses: ISID/build-and-scan-image@main
   with:
     tag: "YOUT_IMAGE_NAME:TAG"
 ```
@@ -43,7 +43,7 @@ See [action.yaml](./action.yaml) .
 
 ```yaml
 - name: Build and scan image
-  uses: ISID/build-and-scan-image
+  uses: ISID/build-and-scan-image@main
   with:
     # Image name and optionally tag in "name:tag" format
     tag: "YOUT_IMAGE_NAME:TAG"
