@@ -20,9 +20,9 @@ inputs:
     required: false
     default: "true"
   hadolint-version:
-    description: Hadolint version (default "2.5.0")
+    description: Hadolint version (default "2.6.1")
     required: false
-    default: "2.5.0"
+    default: "2.6.1"
   hadolint-severity:
     description: Fail step if rules with a severity above this level are violated. Acceptable value is one of (error|warning|info|style|ignore|none). (default "info")
     required: false
