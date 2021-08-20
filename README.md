@@ -34,7 +34,8 @@ If you use this repository in ISID project, please read [ISID/build-and-scan-ima
 - name: Build and scan image
   uses: ISID/build-and-scan-image@main
   with:
-    tag: "YOUT_IMAGE_NAME:TAG"
+    tag: "YOUR_IMAGE_NAME:TAG"  # Image name and optionally tag in "name:tag" format
+    path: "."  # Path to base directory to run `docker build` command
 ```
 
 ### All options
@@ -46,7 +47,7 @@ See [action.yaml](./action.yaml) .
   uses: ISID/build-and-scan-image@main
   with:
     # Image name and optionally tag in "name:tag" format
-    tag: "YOUT_IMAGE_NAME:TAG"
+    tag: "YOUR_IMAGE_NAME:TAG"
 
     # Path to base directory to run `docker build` command (default ".")
     path: "."
