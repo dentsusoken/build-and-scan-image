@@ -44,9 +44,9 @@ inputs:
     required: false
     default: "true"
   trivy-version:
-    description: Trivy version (default "0.18.3")
+    description: Trivy version (default "0.19.2")
     required: false
-    default: "0.18.3"
+    default: "0.19.2"
   trivy-severity:
     description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
     required: false
