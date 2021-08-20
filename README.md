@@ -28,34 +28,11 @@ If you use this repository in ISID project, please read [ISID/build-and-scan-ima
 
 ## Usage
 
-### Basic (using deploy key)
+### Basic
 
 ```yaml
-- uses: actions/checkout@v2  # Checkout your repository which contains Dockerfile.
-- uses: actions/checkout@v2  # Checkout this repository.
-  with:
-    repository: ISID/build-and-scan-image
-    ssh-key: ${{ secrets.GH_DEPLOY_KEY }}  # GH_DEPLOY_KEY is a secret that contains deploy key for this repository
-    path: ./build-and-scan-image
-- name: Build and scan image  # Build and scan Dockerfile and container image
-  uses: ./build-and-scan-image
-  with:
-    tag: "YOUT_IMAGE_NAME:TAG"
-```
-
-Please ask administrator of this repository to get deploy key.
-
-### Basic (using personal access token)
-
-```yaml
-- uses: actions/checkout@v2  # Checkout your repository which contains Dockerfile.
-- uses: actions/checkout@v2  # Checkout this repository.
-  with:
-    repository: ISID/build-and-scan-image
-    token: ${{ secrets.GH_TOKEN }}  # GH_TOKEN is a secret that contains your personal access token.
-    path: ./build-and-scan-image
-- name: Build and scan image  # Build and scan Dockerfile and container image
-  uses: ./build-and-scan-image
+- name: Build and scan image
+  uses: ISID/build-and-scan-image
   with:
     tag: "YOUT_IMAGE_NAME:TAG"
 ```
@@ -66,7 +43,7 @@ See [action.yaml](./action.yaml) .
 
 ```yaml
 - name: Build and scan image
-  uses: ./build-and-scan-image
+  uses: ISID/build-and-scan-image
   with:
     # Image name and optionally tag in "name:tag" format
     tag: "YOUT_IMAGE_NAME:TAG"
