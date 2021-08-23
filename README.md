@@ -110,13 +110,5 @@ See [action.yaml](./action.yaml) .
     docker-scan-snyk-token: ""
 ```
 
-### Ignore specific violations and vulnerabilities
-Tools ([hadolint](https://github.com/hadolint/hadolint), [dockle](https://github.com/goodwithtech/dockle), [trivy](https://github.com/aquasecurity/trivy)) provide some way to ignore specific violations and vulnerabilities.
-
-- Using configuration file
-    - `.hadolint.yaml`
-    - `.dockleignore`
-    - `.trivyignore`
-- Using inline comment (hadolint only)
-
-See document of each tools for more details.
+## FAQ
+See [FAQ](./docs/faq.md).
