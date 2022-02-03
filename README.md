@@ -58,8 +58,8 @@ See [action.yaml](./action.yaml) .
     # Enable scanning Dockerfile by hadolint (default "true")
     hadolint-enable: "true"
 
-    # Hadolint version (see action.yaml to know default version)
-    hadolint-version: "0.0.1"
+    # Hadolint version (default "2.8.0")
+    hadolint-version: "2.8.0"
 
     # Fail step if rules with a severity above this level are violated (default "info")
     # Acceptable value is one of (error|warning|info|style|ignore|none)
