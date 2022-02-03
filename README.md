@@ -78,8 +78,8 @@ See [action.yaml](./action.yaml) .
     # Enable scanning image by trivy (default "true")
     trivy-enable: "true"
 
-    # Trivy version (see action.yaml to know default version)
-    trivy-version: "0.0.1"
+    # Trivy version (default "0.23.0")
+    trivy-version: "0.23.0"
 
     # Fail step if image has vulnerabilities with a severity same as this level
     # (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
