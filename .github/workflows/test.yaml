@@ -10,5 +10,5 @@ jobs:
         with:
           path: ./testdata
           tag: testdata:${{ github.sha }}
-          docker-scan-enable: true
-          docker-scan-snyk-token: ${{ secrets.SNYK_TOKEN }}
+          snyk-enable: true
+          snyk-token: ${{ secrets.SNYK_TOKEN }}

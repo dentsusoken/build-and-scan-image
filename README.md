@@ -7,8 +7,7 @@ Build and scan Dockerfile and container image by following tools.
 - [hadolint](https://github.com/hadolint/hadolint)
 - [dockle](https://github.com/goodwithtech/dockle)
 - [trivy](https://github.com/aquasecurity/trivy)
-- [docker scan](https://github.com/docker/scan-cli-plugin) (option)
-    - This use [Snyk](https://snyk.io/) internally.
+- [Snyk](https://snyk.io/) (option)
 
 ## Notes
 
@@ -94,20 +93,23 @@ See [action.yaml](./action.yaml) .
     # Ignore unfixed vulnerabilities (default "false")
     trivy-ignore-unfixed: "false"
 
-    # Enable scanning image by docker scan (default "false")
-    # If enabled, "docker-scan-snyk-token" must be also set. 
-    docker-scan-enable: "false"
+    # Enable scanning image by snyk (default "false")
+    # If enabled, "snyk-token" must be also set.
+    syn-enable: "false"
 
-    # Docker scan version (see action.yaml to know default version)
-    docker-scan-version: "0.0.1"
-
-    # Fail step if image has vulnerabilities with a severity above this level (default "low")
-    # Acceptable value is one of (low|medium|high)
-    docker-scan-severity: low
+    # Snyk CLI version (default "1.848.0")
+    snyk-version: "1.848.0"
 
     # Snyk API Token (default "")
-    # This is necessary if "docker-scan-enable" is "true".
-    docker-scan-snyk-token: ""
+    # This is necessary if "snyk-enable" is "true".
+    snyk-token: ""
+
+    # Fail step if image has vulnerabilities with a severity above this level (default "low")
+    # Acceptable value is one of (low|medium|high|critical)
+    snyk-severity: low
+
+    # Exclude base image vulnerabilities (default "false")
+    snyk-exclude-base-image-vulns: "false"
 ```
 
 ## FAQ
