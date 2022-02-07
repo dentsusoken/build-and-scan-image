@@ -68,8 +68,8 @@ See [action.yaml](./action.yaml) .
     # Enable scanning image by dockle (default "true")
     dockle-enable: "true"
 
-    # Dockle version (see action.yaml to know default version)
-    docke-version: "0.0.1"
+    # Dockle version (default "0.4.3")
+    docke-version: "0.4.3"
 
     # Fail step if checkpoints with a severity above this level are violated (default "WARN")
     # Acceptable value is one of (INFO|WARN|FATAL)

@@ -32,9 +32,9 @@ inputs:
     required: false
     default: "true"
   dockle-version:
-    description: Dockle version (default "0.3.15")
+    description: Dockle version (default "0.4.3")
     required: false
-    default: "0.3.15"
+    default: "0.4.3"
   dockle-severity:
     description: Fail step if checkpoints with a severity above this level are violated. Acceptable value is one of (INFO|WARN|FATAL). (default "WARN")
     required: false
