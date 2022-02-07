@@ -80,19 +80,18 @@ runs:
   steps:
   - name: Scan Dockerfile by hadolint
     run: |
-      if [ "${{ inputs.hadolint-enable }}" == "true" ]; then
-        echo "::group::Scan Dockerfile by hadolint"
+      echo "::group::Scan Dockerfile by hadolint"
 
-        # Install hadolint
-        curl -sL https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-Linux-x86_64 -o /tmp/hadolint
-        chmod +x /tmp/hadolint
-        sudo mv /tmp/hadolint /usr/local/bin/
+      # Install hadolint
+      curl -sL https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-Linux-x86_64 -o /tmp/hadolint
+      chmod +x /tmp/hadolint
+      sudo mv /tmp/hadolint /usr/local/bin/
 
-        # Scan Dockerfile by hadolint
-        hadolint --failure-threshold "${{ inputs.hadolint-severity}}" "${{ inputs.path }}/${{ inputs.dockerfile }}"
+      # Scan Dockerfile by hadolint
+      hadolint --failure-threshold "${{ inputs.hadolint-severity}}" "${{ inputs.path }}/${{ inputs.dockerfile }}"
 
-        echo "::endgroup::"
-      fi
+      echo "::endgroup::"
+    if: ${{ inputs.hadolint-enable == 'true' }}
     shell: bash
   - name: Build image
     run: |
@@ -102,54 +101,51 @@ runs:
     shell: bash
   - name: Scan image by dockle
     run: |
-      if [ "${{ inputs.dockle-enable }}" == "true" ]; then
-        echo "::group::Scan image by dockle"
+      echo "::group::Scan image by dockle"
 
-        # Install dockle
-        curl -sL https://github.com/goodwithtech/dockle/releases/download/v${{ inputs.dockle-version }}/dockle_${{ inputs.dockle-version }}_Linux-64bit.tar.gz -o /tmp/dockle.tar.gz
-        tar zxf /tmp/dockle.tar.gz -C /tmp
-        sudo mv /tmp/dockle /usr/local/bin/
+      # Install dockle
+      curl -sL https://github.com/goodwithtech/dockle/releases/download/v${{ inputs.dockle-version }}/dockle_${{ inputs.dockle-version }}_Linux-64bit.tar.gz -o /tmp/dockle.tar.gz
+      tar zxf /tmp/dockle.tar.gz -C /tmp
+      sudo mv /tmp/dockle /usr/local/bin/
 
-        # Scan image by dockle
-        dockle --exit-code 1 --exit-level "${{ inputs.dockle-severity }}" "${{ inputs.tag }}"
+      # Scan image by dockle
+      dockle --exit-code 1 --exit-level "${{ inputs.dockle-severity }}" "${{ inputs.tag }}"
 
-        echo "::endgroup::"
-      fi
+      echo "::endgroup::"
+    if: ${{ inputs.dockle-enable == 'true' }}
     shell: bash
   - name: Scan image by trivy
     run: |
-      if [ "${{ inputs.trivy-enable }}" == "true" ]; then
-        echo "::group::Scan image by trivy"
+      echo "::group::Scan image by trivy"
 
-        # Install trivy
-        curl -sL https://github.com/aquasecurity/trivy/releases/download/v${{ inputs.trivy-version }}/trivy_${{ inputs.trivy-version }}_Linux-64bit.tar.gz -o /tmp/trivy.tar.gz
-        tar zxf /tmp/trivy.tar.gz -C /tmp
-        sudo mv /tmp/trivy /usr/local/bin/
+      # Install trivy
+      curl -sL https://github.com/aquasecurity/trivy/releases/download/v${{ inputs.trivy-version }}/trivy_${{ inputs.trivy-version }}_Linux-64bit.tar.gz -o /tmp/trivy.tar.gz
+      tar zxf /tmp/trivy.tar.gz -C /tmp
+      sudo mv /tmp/trivy /usr/local/bin/
 
-        # Scan image by dockle
-        trivy image --exit-code 1 --severity "${{ inputs.trivy-severity }}" --no-progress --vuln-type "${{ inputs.trivy-vuln-type }}" --ignore-unfixed="${{ inputs.trivy-ignore-unfixed }}" "${{ inputs.tag }}"
+      # Scan image by dockle
+      trivy image --exit-code 1 --severity "${{ inputs.trivy-severity }}" --no-progress --vuln-type "${{ inputs.trivy-vuln-type }}" --ignore-unfixed="${{ inputs.trivy-ignore-unfixed }}" "${{ inputs.tag }}"
 
-        echo "::endgroup::"
-      fi
+      echo "::endgroup::"
+    if: ${{ inputs.trivy-enable == 'true' }}
     shell: bash
   - name: Scan image by docker scan
     run: |
-      if [ "${{ inputs.docker-scan-enable }}" == "true" ]; then
-        echo "::group::Scan image by docker scan"
+      echo "::group::Scan image by docker scan"
 
-        # Install docker scan
-        mkdir -p ${HOME}/.docker/cli-plugins
-        curl -sL https://github.com/docker/scan-cli-plugin/releases/download/v${{ inputs.docker-scan-version }}/docker-scan_linux_amd64 -o ${HOME}/.docker/cli-plugins/docker-scan
-        chmod +x ${HOME}/.docker/cli-plugins/docker-scan
+      # Install docker scan
+      mkdir -p ${HOME}/.docker/cli-plugins
+      curl -sL https://github.com/docker/scan-cli-plugin/releases/download/v${{ inputs.docker-scan-version }}/docker-scan_linux_amd64 -o ${HOME}/.docker/cli-plugins/docker-scan
+      chmod +x ${HOME}/.docker/cli-plugins/docker-scan
 
-        # Scan image by docker scan
-        if [ "${{ inputs.docker-scan-snyk-token }}" == "" ]; then
-          echo "'docker-scan-snyk-token' is necessary if 'docker-scan-enable' is 'true'"
-          exit 1
-        fi
-        docker scan --accept-license --login --token "${{ inputs.docker-scan-snyk-token }}"
-        docker scan --accept-license --file "${{ inputs.path }}/${{ inputs.dockerfile }}" --severity "${{ inputs.docker-scan-severity }}" "${{ inputs.tag }}"
-
-        echo "::endgroup::"
+      # Scan image by docker scan
+      if [ "${{ inputs.docker-scan-snyk-token }}" == "" ]; then
+        echo "'docker-scan-snyk-token' is necessary if 'docker-scan-enable' is 'true'"
+        exit 1
       fi
+      docker scan --accept-license --login --token "${{ inputs.docker-scan-snyk-token }}"
+      docker scan --accept-license --file "${{ inputs.path }}/${{ inputs.dockerfile }}" --severity "${{ inputs.docker-scan-severity }}" "${{ inputs.tag }}"
+
+      echo "::endgroup::"
+    if: ${{ inputs.docker-scan-enable == 'true' }}
     shell: bash
