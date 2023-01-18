@@ -1,0 +1,33 @@
+{
+    "repositories": [
+        "ISID/build-and-scan-image"
+    ],
+    "extends": [
+        "config:base",
+        ":prHourlyLimitNone",
+        ":prConcurrentLimitNone",
+        ":disableDependencyDashboard"
+    ],
+    "enabledManagers": [
+        "regex"
+    ],
+    "labels": [
+        "renovate"
+    ],
+    "assignees": [
+        "@ShibataTakao"
+    ],
+    "regexManagers": [
+        {
+            "fileMatch": [
+                "^action.yaml$"
+            ],
+            "matchStrings": [
+                "\"(?<currentValue>[\\d\\.]+)\"\\s*#\\s*renovate:(?<depName>.+)"
+            ],
+            "datasourceTemplate": "github-releases",
+            "versioningTemplate": "semver",
+            "extractVersionTemplate": "^v(?<version>.*)$"
+        }
+    ]
+}

@@ -20,9 +20,9 @@ inputs:
     required: false
     default: "true"
   hadolint-version:
-    description: Hadolint version (default "2.8.0")
+    description: Hadolint version.
     required: false
-    default: "2.8.0"
+    default: "2.8.0" # renovate:hadolint/hadolint
   hadolint-severity:
     description: Fail step if rules with a severity above this level are violated. Acceptable value is one of (error|warning|info|style|ignore|none). (default "info")
     required: false
@@ -32,9 +32,9 @@ inputs:
     required: false
     default: "true"
   dockle-version:
-    description: Dockle version (default "0.4.3")
+    description: Dockle version.
     required: false
-    default: "0.4.3"
+    default: "0.4.3" # renovate:goodwithtech/dockle
   dockle-severity:
     description: Fail step if checkpoints with a severity above this level are violated. Acceptable value is one of (INFO|WARN|FATAL). (default "WARN")
     required: false
@@ -44,9 +44,9 @@ inputs:
     required: false
     default: "true"
   trivy-version:
-    description: Trivy version (default "0.23.0")
+    description: Trivy version.
     required: false
-    default: "0.23.0"
+    default: "0.23.0" # renovate:aquasecurity/trivy
   trivy-severity:
     description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
     required: false
@@ -64,9 +64,9 @@ inputs:
     required: false
     default: "false"
   snyk-version:
-    description: Snyk CLI version (default "1.848.0")
+    description: Snyk CLI version.
     required: false
-    default: "1.848.0"
+    default: "1.848.0" # renovate:snyk/snyk
   snyk-token:
     description: Snyk API Token. This is necessary if "snyk-enable" is "true". (default "")
     required: false
