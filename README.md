@@ -68,7 +68,7 @@ See [action.yaml](./action.yaml) .
     dockle-enable: "true"
 
     # Dockle version.
-    docke-version: "0.4.3"
+    dockle-version: "0.4.3"
 
     # Fail step if checkpoints with a severity above this level are violated (default "WARN")
     # Acceptable value is one of (INFO|WARN|FATAL)
@@ -95,7 +95,7 @@ See [action.yaml](./action.yaml) .
 
     # Enable scanning image by snyk (default "false")
     # If enabled, "snyk-token" must be also set.
-    syn-enable: "false"
+    snyk-enable: "false"
 
     # Snyk CLI version.
     snyk-version: "1.848.0"
