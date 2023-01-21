@@ -57,7 +57,7 @@ See [action.yaml](./action.yaml) .
     # Enable scanning Dockerfile by hadolint (default "true")
     hadolint-enable: "true"
 
-    # Hadolint version (default "2.8.0")
+    # Hadolint version.
     hadolint-version: "2.8.0"
 
     # Fail step if rules with a severity above this level are violated (default "info")
@@ -67,7 +67,7 @@ See [action.yaml](./action.yaml) .
     # Enable scanning image by dockle (default "true")
     dockle-enable: "true"
 
-    # Dockle version (default "0.4.3")
+    # Dockle version.
     docke-version: "0.4.3"
 
     # Fail step if checkpoints with a severity above this level are violated (default "WARN")
@@ -77,7 +77,7 @@ See [action.yaml](./action.yaml) .
     # Enable scanning image by trivy (default "true")
     trivy-enable: "true"
 
-    # Trivy version (default "0.23.0")
+    # Trivy version.
     trivy-version: "0.23.0"
 
     # Fail step if image has vulnerabilities with a severity same as this level
@@ -97,7 +97,7 @@ See [action.yaml](./action.yaml) .
     # If enabled, "snyk-token" must be also set.
     syn-enable: "false"
 
-    # Snyk CLI version (default "1.848.0")
+    # Snyk CLI version.
     snyk-version: "1.848.0"
 
     # Snyk API Token (default "")
