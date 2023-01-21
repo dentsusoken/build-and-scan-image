@@ -14,14 +14,6 @@ Build and scan Dockerfile and container image by following tools.
 ### Experimental
 This repository is experimental. Some options or behavior may be changed without announcement.
 
-### Commercial usage
-Some of trivy's data sources, especially for programing language, are only licensed for non-commercial usage. See following sites for more details.
-
-- https://github.com/aquasecurity/trivy/blob/main/docs/vulnerability/detection/data-source.md
-- https://github.com/aquasecurity/trivy/issues/491
-
-If you use this action for commercial usage, you MUST set `trivy-vuln-type` option as `os` and use trivy without non-commercial data sources.
-
 ### Use in ISID project
 If you use this repository in ISID project, please read [ISID/build-and-scan-image-internal](https://github.com/ISID/build-and-scan-image-internal) too. It can be accessed by only ISID members.
 
@@ -85,10 +77,9 @@ See [action.yaml](./action.yaml) .
     # Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL)
     trivy-severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
 
-    # Vulnerability types which trivy detect to (default "os")
+    # Vulnerability types which trivy detect to (default "os,library")
     # Acceptable value is comma-separated list of (os|library)
-    # If you use this action for commercial usage, you MUST set this option as "os" and use trivy without non-commercial data sources.
-    trivy-vuln-type: os
+    trivy-vuln-type: os,library
 
     # Ignore unfixed vulnerabilities (default "false")
     trivy-ignore-unfixed: "false"

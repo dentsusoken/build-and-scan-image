@@ -52,9 +52,9 @@ inputs:
     required: false
     default: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
   trivy-vuln-type:
-    description: Vulnerability types which trivy detect to. If you use this action for commercial usage, you MUST set this option as "os" and use trivy without non-commercial data sources. Acceptable value is comma-separated list of (os|library). (default "os")
+    description: Vulnerability types which trivy detect to. Acceptable value is comma-separated list of (os|library). (default "os,library")
     required: false
-    default: os
+    default: os,library
   trivy-ignore-unfixed:
     description: Ignore unfixed vulnerabilities (default "false")
     required: false
