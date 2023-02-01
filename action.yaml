@@ -22,7 +22,7 @@ inputs:
   hadolint-version:
     description: Hadolint version.
     required: false
-    default: "2.8.0" # renovate:hadolint/hadolint
+    default: "2.12.0" # renovate:hadolint/hadolint
   hadolint-severity:
     description: Fail step if rules with a severity above this level are violated. Acceptable value is one of (error|warning|info|style|ignore|none). (default "info")
     required: false
