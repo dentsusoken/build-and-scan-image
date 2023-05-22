@@ -97,12 +97,17 @@ runs:
       echo "::endgroup::"
     if: ${{ inputs.hadolint-enable == 'true' }}
     shell: bash
+  - name: Set up Docker Buildx
+    uses: docker/setup-buildx-action@v2
   - name: Build image
-    run: |
-      echo "::group::Build image"
-      docker build -t "${{ inputs.tag }}" -f "${{ inputs.path }}/${{ inputs.dockerfile }}" "${{ inputs.path }}"
-      echo "::endgroup::"
-    shell: bash
+    uses: docker/build-push-action@v4
+    with:
+      context: ${{ inputs.path }}
+      file: ${{ inputs.path }}/${{ inputs.dockerfile }}
+      tags: ${{ inputs.tag }}
+      cache-from: type=gha
+      cache-to: type=gha,mode=max
+      load: true
   - name: Scan image by dockle
     run: |
       echo "::group::Scan image by dockle"
