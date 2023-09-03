@@ -87,14 +87,18 @@ runs:
       echo "::group::Scan Dockerfile by hadolint"
 
       # Install hadolint
-      curl -sL https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-Linux-x86_64 -o /tmp/hadolint
+      curl -sL "${HADOLINT_RELEASE_ASSET_URL}" -o /tmp/hadolint
       chmod +x /tmp/hadolint
       sudo mv /tmp/hadolint /usr/local/bin/
 
       # Scan Dockerfile by hadolint
-      hadolint --failure-threshold "${{ inputs.hadolint-severity}}" "${{ inputs.path }}/${{ inputs.dockerfile }}"
+      hadolint --failure-threshold "${HADOLINT_FAILURE_THRESHOLD}" "${DOCKERFILE}"
 
       echo "::endgroup::"
+    env:
+      HADOLINT_RELEASE_ASSET_URL: "https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-Linux-x86_64"
+      HADOLINT_FAILURE_THRESHOLD: "${{ inputs.hadolint-severity}}"
+      DOCKERFILE: "${{ inputs.path }}/${{ inputs.dockerfile }}"
     if: ${{ inputs.hadolint-enable == 'true' }}
     shell: bash
   - name: Set up Docker Buildx
@@ -113,14 +117,18 @@ runs:
       echo "::group::Scan image by dockle"
 
       # Install dockle
-      curl -sL https://github.com/goodwithtech/dockle/releases/download/v${{ inputs.dockle-version }}/dockle_${{ inputs.dockle-version }}_Linux-64bit.tar.gz -o /tmp/dockle.tar.gz
+      curl -sL "${DOCKLE_RELEASE_ASSET_URL}" -o /tmp/dockle.tar.gz
       tar zxf /tmp/dockle.tar.gz -C /tmp
       sudo mv /tmp/dockle /usr/local/bin/
 
       # Scan image by dockle
-      dockle --exit-code 1 --exit-level "${{ inputs.dockle-severity }}" "${{ inputs.tag }}"
+      dockle --exit-code 1 --exit-level "${DOCKLE_EXIT_LEVEL}" "${IMAGE}"
 
       echo "::endgroup::"
+    env:
+      DOCKLE_RELEASE_ASSET_URL: "https://github.com/goodwithtech/dockle/releases/download/v${{ inputs.dockle-version }}/dockle_${{ inputs.dockle-version }}_Linux-64bit.tar.gz"
+      DOCKLE_EXIT_LEVEL: "${{ inputs.dockle-severity }}"
+      IMAGE: "${{ inputs.tag }}"
     if: ${{ inputs.dockle-enable == 'true' }}
     shell: bash
   - name: Scan image by trivy
@@ -128,14 +136,22 @@ runs:
       echo "::group::Scan image by trivy"
 
       # Install trivy
-      curl -sL https://github.com/aquasecurity/trivy/releases/download/v${{ inputs.trivy-version }}/trivy_${{ inputs.trivy-version }}_Linux-64bit.tar.gz -o /tmp/trivy.tar.gz
+      curl -sL "${TRIVY_RELEASE_ASSET_URL}" -o /tmp/trivy.tar.gz
       tar zxf /tmp/trivy.tar.gz -C /tmp
       sudo mv /tmp/trivy /usr/local/bin/
 
       # Scan image by dockle
-      trivy image --exit-code 1 --severity "${{ inputs.trivy-severity }}" --no-progress --vuln-type "${{ inputs.trivy-vuln-type }}" --ignore-unfixed="${{ inputs.trivy-ignore-unfixed }}" "${{ inputs.tag }}"
+      trivy image "${IMAGE}"
 
       echo "::endgroup::"
+    env:
+      TRIVY_RELEASE_ASSET_URL: "https://github.com/aquasecurity/trivy/releases/download/v${{ inputs.trivy-version }}/trivy_${{ inputs.trivy-version }}_Linux-64bit.tar.gz"
+      TRIVY_EXIT_CODE: "1"
+      TRIVY_IGNORE_UNFIXED: "${{ inputs.trivy-ignore-unfixed }}"
+      TRIVY_NO_PROGRESS: "true"
+      TRIVY_SEVERITY: "${{ inputs.trivy-severity }}"
+      TRIVY_VULN_TYPE: "${{ inputs.trivy-vuln-type }}"
+      IMAGE: "${{ inputs.tag }}"
     if: ${{ inputs.trivy-enable == 'true' }}
     shell: bash
   - name: Scan image by snyk
@@ -143,28 +159,33 @@ runs:
       echo "::group::Scan image by snyk"
 
       # Install snyk
-      curl -sL https://github.com/snyk/snyk/releases/download/v${{ inputs.snyk-version }}/snyk-linux -o /tmp/snyk
+      curl -sL "${SNYK_RELEASE_ASSET_URL}" -o /tmp/snyk
       chmod +x /tmp/snyk
       sudo mv /tmp/snyk /usr/local/bin/
 
       # Make sure snyk token is passed
-      if [ "${{ inputs.snyk-token }}" == "" ]; then
+      if [ -z "${SNYK_TOKEN}" ]; then
         echo "'snyk-token' is necessary if 'snyk-enable' is 'true'"
         exit 1
       fi
 
-      # Construct flags
-      FLAGS=""
-      if [ "${{ inputs.snyk-exclude-base-image-vulns }}" == "true" ]; then
-        FLAGS="--exclude-base-image-vulns"
-      fi
-
       # Authenticate
-      snyk auth "${{ inputs.snyk-token }}"
+      snyk auth "${SNYK_TOKEN}"
 
       # Scan image by snyk
-      snyk container test --file="${{ inputs.path }}/${{ inputs.dockerfile }}" --severity-threshold="${{ inputs.snyk-severity }}" ${FLAGS} "${{ inputs.tag }}"
+      if [ "${SNYK_EXCLUDE_BASE_IMAGE_VULNS}" == "true" ]; then
+        snyk container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" --exclude-base-image-vulns "${IMAGE}"
+      else
+        snyk container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" "${IMAGE}"
+      fi
 
       echo "::endgroup::"
+    env:
+      SNYK_RELEASE_ASSET_URL: "https://github.com/snyk/snyk/releases/download/v${{ inputs.snyk-version }}/snyk-linux"
+      SNYK_EXCLUDE_BASE_IMAGE_VULNS: "${{ inputs.snyk-exclude-base-image-vulns }}"
+      SNYK_SEVERITY_THRESHOLD: "${{ inputs.snyk-severity }}"
+      SNYK_TOKEN: "${{ inputs.snyk-token }}"
+      DOCKERFILE: "${{ inputs.path }}/${{ inputs.dockerfile }}"
+      IMAGE: "${{ inputs.tag }}"
     if: ${{ inputs.snyk-enable == 'true' }}
     shell: bash
