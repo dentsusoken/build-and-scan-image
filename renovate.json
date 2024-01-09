@@ -1,6 +1,6 @@
 {
     "repositories": [
-        "ISID/build-and-scan-image"
+        "dentsusoken/build-and-scan-image"
     ],
     "extends": [
         "config:base",
