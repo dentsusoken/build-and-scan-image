@@ -1,6 +1,6 @@
 # Build and Scan Image
 
-[![test workflow](https://github.com/ISID/build-and-scan-image/actions/workflows/test.yaml/badge.svg)](https://github.com/ISID/build-and-scan-image/actions/workflows/test.yaml)
+[![test workflow](https://github.com/dentsusoken/build-and-scan-image/actions/workflows/test.yaml/badge.svg)](https://github.com/dentsusoken/build-and-scan-image/actions/workflows/test.yaml)
 
 Build and scan Dockerfile and container image by following tools.
 
@@ -14,8 +14,8 @@ Build and scan Dockerfile and container image by following tools.
 ### Experimental
 This repository is experimental. Some options or behavior may be changed without announcement.
 
-### Use in ISID project
-If you use this repository in ISID project, please read [ISID/build-and-scan-image-internal](https://github.com/ISID/build-and-scan-image-internal) too. It can be accessed by only ISID members.
+### Use in Dentsu Soken project
+If you use this repository in Dentsu Soken project, please read [dentsusoken/build-and-scan-image-internal](https://github.com/dentsusoken/build-and-scan-image-internal) too. It can be accessed by only Dentsu Soken members.
 
 ## Usage
 
@@ -23,7 +23,7 @@ If you use this repository in ISID project, please read [ISID/build-and-scan-ima
 
 ```yaml
 - name: Build and scan image
-  uses: ISID/build-and-scan-image@main
+  uses: dentsusoken/build-and-scan-image@main
   with:
     tag: "YOUR_IMAGE_NAME:TAG"  # Image name and optionally tag in "name:tag" format
     path: "."  # Path to base directory to run `docker build` command
@@ -35,7 +35,7 @@ See [action.yaml](./action.yaml) .
 
 ```yaml
 - name: Build and scan image
-  uses: ISID/build-and-scan-image@main
+  uses: dentsusoken/build-and-scan-image@main
   with:
     # Image name and optionally tag in "name:tag" format
     tag: "YOUR_IMAGE_NAME:TAG"
