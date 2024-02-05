@@ -34,7 +34,7 @@ inputs:
   dockle-version:
     description: Dockle version.
     required: false
-    default: "0.4.13" # renovate:goodwithtech/dockle
+    default: "0.4.14" # renovate:goodwithtech/dockle
   dockle-severity:
     description: Fail step if checkpoints with a severity above this level are violated. Acceptable value is one of (INFO|WARN|FATAL). (default "WARN")
     required: false
