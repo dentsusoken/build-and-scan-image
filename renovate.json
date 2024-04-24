@@ -9,7 +9,7 @@
         ":disableDependencyDashboard"
     ],
     "enabledManagers": [
-        "regex",
+        "custom.regex",
         "github-actions"
     ],
     "labels": [
@@ -18,8 +18,9 @@
     "assignees": [
         "@ShibataTakao"
     ],
-    "regexManagers": [
+    "customManagers": [
         {
+            "customType": "regex",
             "fileMatch": [
                 "^action.yaml$"
             ],
