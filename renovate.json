@@ -3,7 +3,7 @@
         "dentsusoken/build-and-scan-image"
     ],
     "extends": [
-        "config:base",
+        "config:best-practices",
         ":prHourlyLimitNone",
         ":prConcurrentLimitNone",
         ":disableDependencyDashboard"
