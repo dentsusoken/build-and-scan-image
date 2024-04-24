@@ -9,7 +9,8 @@
         ":disableDependencyDashboard"
     ],
     "enabledManagers": [
-        "regex"
+        "regex",
+        "github-actions"
     ],
     "labels": [
         "renovate"
