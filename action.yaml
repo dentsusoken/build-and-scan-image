@@ -46,7 +46,7 @@ inputs:
   trivy-version:
     description: Trivy version.
     required: false
-    default: "0.50.4" # renovate:aquasecurity/trivy
+    default: "0.51.1" # renovate:aquasecurity/trivy
   trivy-severity:
     description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
     required: false
