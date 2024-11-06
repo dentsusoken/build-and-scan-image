@@ -150,7 +150,7 @@ runs:
       TRIVY_IGNORE_UNFIXED: "${{ inputs.trivy-ignore-unfixed }}"
       TRIVY_NO_PROGRESS: "true"
       TRIVY_SEVERITY: "${{ inputs.trivy-severity }}"
-      TRIVY_VULN_TYPE: "${{ inputs.trivy-vuln-type }}"
+      TRIVY_PKG_TYPES: "${{ inputs.trivy-vuln-type }}"
       IMAGE: "${{ inputs.tag }}"
     if: ${{ inputs.trivy-enable == 'true' }}
     shell: bash
