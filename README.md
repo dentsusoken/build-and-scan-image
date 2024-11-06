@@ -84,6 +84,12 @@ See [action.yaml](./action.yaml) .
     # Ignore unfixed vulnerabilities (default "false")
     trivy-ignore-unfixed: "false"
 
+    # OCI repository(ies) to retrieve trivy-db in order of priority
+    trivy-db-repository: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+
+    # OCI repository(ies) to retrieve trivy-java-db in order of priority
+    trivy-java-db-repository: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-db:1"
+
     # Enable scanning image by snyk (default "false")
     # If enabled, "snyk-token" must be also set.
     snyk-enable: "false"

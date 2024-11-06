@@ -59,6 +59,14 @@ inputs:
     description: Ignore unfixed vulnerabilities (default "false")
     required: false
     default: "false"
+  trivy-db-repository:
+    description: OCI repository(ies) to retrieve trivy-db in order of priority
+    required: false
+    default: "ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2"
+  trivy-java-db-repository:
+    description: OCI repository(ies) to retrieve trivy-java-db in order of priority
+    required: false
+    default: "ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-db:1"
   snyk-enable:
     description: Enable scanning image by snyk. If enabled, "snyk-token" must be also set. (default "false")
     required: false
@@ -152,6 +160,8 @@ runs:
       TRIVY_SEVERITY: "${{ inputs.trivy-severity }}"
       TRIVY_PKG_TYPES: "${{ inputs.trivy-vuln-type }}"
       IMAGE: "${{ inputs.tag }}"
+      TRIVY_DB_REPOSITORY: "${{ inputs.trivy-db-repository }}"
+      TRIVY_JAVA_DB_REPOSITORY: "${{ inputs.trivy-java-db-repository }}"
     if: ${{ inputs.trivy-enable == 'true' }}
     shell: bash
   - name: Scan image by snyk
