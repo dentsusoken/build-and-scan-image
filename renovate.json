@@ -21,8 +21,8 @@
     "customManagers": [
         {
             "customType": "regex",
-            "fileMatch": [
-                "^action.yaml$"
+            "managerFilePatterns": [
+                "/^action.yaml$/"
             ],
             "matchStrings": [
                 "\"(?<currentValue>[\\d\\.]+)\"\\s*#\\s*renovate:(?<depName>.+)"
