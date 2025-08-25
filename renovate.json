@@ -31,5 +31,15 @@
             "versioningTemplate": "semver",
             "extractVersionTemplate": "^v(?<version>.*)$"
         }
+    ],
+    "packageRules": [
+        {
+            "matchManagers": [
+                "custom.regex",
+                "github-actions"
+            ],
+            "minimumReleaseAge": "14 days",
+            "internalChecksFilter": "strict"
+        }
     ]
 }
