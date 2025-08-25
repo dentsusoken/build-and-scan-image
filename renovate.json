@@ -1,7 +1,4 @@
 {
-    "repositories": [
-        "dentsusoken/build-and-scan-image"
-    ],
     "extends": [
         "config:best-practices",
         ":prHourlyLimitNone",
