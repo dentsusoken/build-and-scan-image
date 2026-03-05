@@ -70,7 +70,7 @@ See [action.yaml](./action.yaml) .
     trivy-enable: "true"
 
     # Trivy version.
-    trivy-version: "0.23.0"
+    trivy-version: "0.69.3"
 
     # Fail step if image has vulnerabilities with a severity same as this level
     # (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
