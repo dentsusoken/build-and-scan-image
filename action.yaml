@@ -22,7 +22,7 @@ inputs:
   hadolint-version:
     description: Hadolint version.
     required: false
-    default: "2.12.0" # renovate:hadolint/hadolint
+    default: "2.12.0"
   hadolint-sha256:
     description: SHA-256 of the downloaded hadolint release asset. Override together with hadolint-version.
     required: false
@@ -38,7 +38,7 @@ inputs:
   dockle-version:
     description: Dockle version.
     required: false
-    default: "0.4.15" # renovate:goodwithtech/dockle
+    default: "0.4.15"
   dockle-sha256:
     description: SHA-256 of the downloaded dockle release asset. Override together with dockle-version.
     required: false
@@ -54,7 +54,7 @@ inputs:
   trivy-version:
     description: Trivy version.
     required: false
-    default: "0.69.3" # renovate:aquasecurity/trivy
+    default: "0.69.3"
   trivy-sha256:
     description: SHA-256 of the downloaded trivy release asset. Override together with trivy-version.
     required: false
@@ -78,7 +78,7 @@ inputs:
   snyk-version:
     description: Snyk CLI version.
     required: false
-    default: "1.1298.3" # renovate:snyk/snyk
+    default: "1.1298.3"
   snyk-sha256:
     description: SHA-256 of the downloaded snyk release asset. Override together with snyk-version.
     required: false
