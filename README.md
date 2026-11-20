@@ -50,7 +50,10 @@ See [action.yaml](./action.yaml) .
     hadolint-enable: "true"
 
     # Hadolint version.
-    hadolint-version: "2.8.0"
+    hadolint-version: "2.12.0"
+
+    # SHA-256 of the downloaded release asset (must match hadolint-version)
+    hadolint-sha256: "56de6d5e5ec427e17b74fa48d51271c7fc0d61244bf5c90e828aab8362d55010"
 
     # Fail step if rules with a severity above this level are violated (default "info")
     # Acceptable value is one of (error|warning|info|style|ignore|none)
@@ -60,7 +63,10 @@ See [action.yaml](./action.yaml) .
     dockle-enable: "true"
 
     # Dockle version.
-    dockle-version: "0.4.3"
+    dockle-version: "0.4.15"
+
+    # SHA-256 of the downloaded release asset (must match dockle-version)
+    dockle-sha256: "8bfc9183d1d3d67800edb45bea4bb63ddf1d28bec5f89944075a07007d79caad"
 
     # Fail step if checkpoints with a severity above this level are violated (default "WARN")
     # Acceptable value is one of (INFO|WARN|FATAL)
@@ -71,6 +77,9 @@ See [action.yaml](./action.yaml) .
 
     # Trivy version.
     trivy-version: "0.69.3"
+
+    # SHA-256 of the downloaded release asset (must match trivy-version)
+    trivy-sha256: "1816b632dfe529869c740c0913e36bd1629cb7688bd5634f4a858c1d57c88b75"
 
     # Fail step if image has vulnerabilities with a severity same as this level
     # (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
@@ -89,7 +98,10 @@ See [action.yaml](./action.yaml) .
     snyk-enable: "false"
 
     # Snyk CLI version.
-    snyk-version: "1.848.0"
+    snyk-version: "1.1298.3"
+
+    # SHA-256 of the downloaded release asset (must match snyk-version)
+    snyk-sha256: "943cffd46891174b0f660a8d20d9e555910a178ca2f74dff98844b38388e49dd"
 
     # Snyk API Token (default "")
     # This is necessary if "snyk-enable" is "true".

@@ -23,6 +23,10 @@ inputs:
     description: Hadolint version.
     required: false
     default: "2.12.0" # renovate:hadolint/hadolint
+  hadolint-sha256:
+    description: SHA-256 of the downloaded hadolint release asset. Override together with hadolint-version.
+    required: false
+    default: "56de6d5e5ec427e17b74fa48d51271c7fc0d61244bf5c90e828aab8362d55010"
   hadolint-severity:
     description: Fail step if rules with a severity above this level are violated. Acceptable value is one of (error|warning|info|style|ignore|none). (default "info")
     required: false
@@ -35,6 +39,10 @@ inputs:
     description: Dockle version.
     required: false
     default: "0.4.15" # renovate:goodwithtech/dockle
+  dockle-sha256:
+    description: SHA-256 of the downloaded dockle release asset. Override together with dockle-version.
+    required: false
+    default: "8bfc9183d1d3d67800edb45bea4bb63ddf1d28bec5f89944075a07007d79caad"
   dockle-severity:
     description: Fail step if checkpoints with a severity above this level are violated. Acceptable value is one of (INFO|WARN|FATAL). (default "WARN")
     required: false
@@ -47,6 +55,10 @@ inputs:
     description: Trivy version.
     required: false
     default: "0.69.3" # renovate:aquasecurity/trivy
+  trivy-sha256:
+    description: SHA-256 of the downloaded trivy release asset. Override together with trivy-version.
+    required: false
+    default: "1816b632dfe529869c740c0913e36bd1629cb7688bd5634f4a858c1d57c88b75"
   trivy-severity:
     description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
     required: false
@@ -67,6 +79,10 @@ inputs:
     description: Snyk CLI version.
     required: false
     default: "1.1298.3" # renovate:snyk/snyk
+  snyk-sha256:
+    description: SHA-256 of the downloaded snyk release asset. Override together with snyk-version.
+    required: false
+    default: "943cffd46891174b0f660a8d20d9e555910a178ca2f74dff98844b38388e49dd"
   snyk-token:
     description: Snyk API Token. This is necessary if "snyk-enable" is "true". (default "")
     required: false
@@ -84,18 +100,26 @@ runs:
   steps:
   - name: Scan Dockerfile by hadolint
     run: |
+      set -euo pipefail
       echo "::group::Scan Dockerfile by hadolint"
 
-      # Install hadolint
-      curl -sL "${HADOLINT_RELEASE_ASSET_URL}" -o /tmp/hadolint
-      chmod +x /tmp/hadolint
-      sudo mv /tmp/hadolint /usr/local/bin/
+      # Download and verify hadolint before extracting or executing it
+      if [[ ! "${HADOLINT_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        echo "::error::hadolint-sha256 must contain exactly 64 hexadecimal characters"
+        exit 1
+      fi
+      SCANNER_DIR="$(mktemp -d "${RUNNER_TEMP}/hadolint.XXXXXX")"
+      trap 'rm -rf -- "${SCANNER_DIR}"' EXIT
+      curl -fsSL "${HADOLINT_RELEASE_ASSET_URL}" -o "${SCANNER_DIR}/hadolint"
+      printf '%s  %s\n' "${HADOLINT_SHA256}" "${SCANNER_DIR}/hadolint" | sha256sum --check --strict
+      chmod +x "${SCANNER_DIR}/hadolint"
 
       # Scan Dockerfile by hadolint
-      hadolint --failure-threshold "${HADOLINT_FAILURE_THRESHOLD}" "${DOCKERFILE}"
+      "${SCANNER_DIR}/hadolint" --failure-threshold "${HADOLINT_FAILURE_THRESHOLD}" "${DOCKERFILE}"
 
       echo "::endgroup::"
     env:
+      HADOLINT_SHA256: "${{ inputs.hadolint-sha256 }}"
       HADOLINT_RELEASE_ASSET_URL: "https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-Linux-x86_64"
       HADOLINT_FAILURE_THRESHOLD: "${{ inputs.hadolint-severity}}"
       DOCKERFILE: "${{ inputs.path }}/${{ inputs.dockerfile }}"
@@ -114,18 +138,27 @@ runs:
       load: true
   - name: Scan image by dockle
     run: |
+      set -euo pipefail
       echo "::group::Scan image by dockle"
 
-      # Install dockle
-      curl -sL "${DOCKLE_RELEASE_ASSET_URL}" -o /tmp/dockle.tar.gz
-      tar zxf /tmp/dockle.tar.gz -C /tmp
-      sudo mv /tmp/dockle /usr/local/bin/
+      # Download and verify dockle before extracting or executing it
+      if [[ ! "${DOCKLE_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        echo "::error::dockle-sha256 must contain exactly 64 hexadecimal characters"
+        exit 1
+      fi
+      SCANNER_DIR="$(mktemp -d "${RUNNER_TEMP}/dockle.XXXXXX")"
+      trap 'rm -rf -- "${SCANNER_DIR}"' EXIT
+      curl -fsSL "${DOCKLE_RELEASE_ASSET_URL}" -o "${SCANNER_DIR}/dockle.tar.gz"
+      printf '%s  %s\n' "${DOCKLE_SHA256}" "${SCANNER_DIR}/dockle.tar.gz" | sha256sum --check --strict
+      tar zxf "${SCANNER_DIR}/dockle.tar.gz" -C "${SCANNER_DIR}" dockle
+      chmod +x "${SCANNER_DIR}/dockle"
 
       # Scan image by dockle
-      dockle --exit-code 1 --exit-level "${DOCKLE_EXIT_LEVEL}" "${IMAGE}"
+      "${SCANNER_DIR}/dockle" --exit-code 1 --exit-level "${DOCKLE_EXIT_LEVEL}" "${IMAGE}"
 
       echo "::endgroup::"
     env:
+      DOCKLE_SHA256: "${{ inputs.dockle-sha256 }}"
       DOCKLE_RELEASE_ASSET_URL: "https://github.com/goodwithtech/dockle/releases/download/v${{ inputs.dockle-version }}/dockle_${{ inputs.dockle-version }}_Linux-64bit.tar.gz"
       DOCKLE_EXIT_LEVEL: "${{ inputs.dockle-severity }}"
       IMAGE: "${{ inputs.tag }}"
@@ -133,18 +166,27 @@ runs:
     shell: bash
   - name: Scan image by trivy
     run: |
+      set -euo pipefail
       echo "::group::Scan image by trivy"
 
-      # Install trivy
-      curl -sL "${TRIVY_RELEASE_ASSET_URL}" -o /tmp/trivy.tar.gz
-      tar zxf /tmp/trivy.tar.gz -C /tmp
-      sudo mv /tmp/trivy /usr/local/bin/
+      # Download and verify trivy before extracting or executing it
+      if [[ ! "${TRIVY_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        echo "::error::trivy-sha256 must contain exactly 64 hexadecimal characters"
+        exit 1
+      fi
+      SCANNER_DIR="$(mktemp -d "${RUNNER_TEMP}/trivy.XXXXXX")"
+      trap 'rm -rf -- "${SCANNER_DIR}"' EXIT
+      curl -fsSL "${TRIVY_RELEASE_ASSET_URL}" -o "${SCANNER_DIR}/trivy.tar.gz"
+      printf '%s  %s\n' "${TRIVY_SHA256}" "${SCANNER_DIR}/trivy.tar.gz" | sha256sum --check --strict
+      tar zxf "${SCANNER_DIR}/trivy.tar.gz" -C "${SCANNER_DIR}" trivy
+      chmod +x "${SCANNER_DIR}/trivy"
 
-      # Scan image by dockle
-      trivy image "${IMAGE}"
+      # Scan image by trivy
+      "${SCANNER_DIR}/trivy" image "${IMAGE}"
 
       echo "::endgroup::"
     env:
+      TRIVY_SHA256: "${{ inputs.trivy-sha256 }}"
       TRIVY_RELEASE_ASSET_URL: "https://github.com/aquasecurity/trivy/releases/download/v${{ inputs.trivy-version }}/trivy_${{ inputs.trivy-version }}_Linux-64bit.tar.gz"
       TRIVY_EXIT_CODE: "1"
       TRIVY_IGNORE_UNFIXED: "${{ inputs.trivy-ignore-unfixed }}"
@@ -156,12 +198,19 @@ runs:
     shell: bash
   - name: Scan image by snyk
     run: |
+      set -euo pipefail
       echo "::group::Scan image by snyk"
 
-      # Install snyk
-      curl -sL "${SNYK_RELEASE_ASSET_URL}" -o /tmp/snyk
-      chmod +x /tmp/snyk
-      sudo mv /tmp/snyk /usr/local/bin/
+      # Download and verify snyk before extracting or executing it
+      if [[ ! "${SNYK_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        echo "::error::snyk-sha256 must contain exactly 64 hexadecimal characters"
+        exit 1
+      fi
+      SCANNER_DIR="$(mktemp -d "${RUNNER_TEMP}/snyk.XXXXXX")"
+      trap 'rm -rf -- "${SCANNER_DIR}"' EXIT
+      curl -fsSL "${SNYK_RELEASE_ASSET_URL}" -o "${SCANNER_DIR}/snyk"
+      printf '%s  %s\n' "${SNYK_SHA256}" "${SCANNER_DIR}/snyk" | sha256sum --check --strict
+      chmod +x "${SCANNER_DIR}/snyk"
 
       # Make sure snyk token is passed
       if [ -z "${SNYK_TOKEN}" ]; then
@@ -170,17 +219,18 @@ runs:
       fi
 
       # Authenticate
-      snyk auth "${SNYK_TOKEN}"
+      "${SCANNER_DIR}/snyk" auth "${SNYK_TOKEN}"
 
       # Scan image by snyk
       if [ "${SNYK_EXCLUDE_BASE_IMAGE_VULNS}" == "true" ]; then
-        snyk container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" --exclude-base-image-vulns "${IMAGE}"
+        "${SCANNER_DIR}/snyk" container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" --exclude-base-image-vulns "${IMAGE}"
       else
-        snyk container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" "${IMAGE}"
+        "${SCANNER_DIR}/snyk" container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" "${IMAGE}"
       fi
 
       echo "::endgroup::"
     env:
+      SNYK_SHA256: "${{ inputs.snyk-sha256 }}"
       SNYK_RELEASE_ASSET_URL: "https://github.com/snyk/snyk/releases/download/v${{ inputs.snyk-version }}/snyk-linux"
       SNYK_EXCLUDE_BASE_IMAGE_VULNS: "${{ inputs.snyk-exclude-base-image-vulns }}"
       SNYK_SEVERITY_THRESHOLD: "${{ inputs.snyk-severity }}"
