@@ -7,7 +7,6 @@ Build and scan Dockerfile and container image by following tools.
 - [hadolint](https://github.com/hadolint/hadolint)
 - [dockle](https://github.com/goodwithtech/dockle)
 - [trivy](https://github.com/aquasecurity/trivy)
-- [Snyk](https://snyk.io/) (option)
 
 ## Notes
 
@@ -92,27 +91,6 @@ See [action.yaml](./action.yaml) .
 
     # Ignore unfixed vulnerabilities (default "false")
     trivy-ignore-unfixed: "false"
-
-    # Enable scanning image by snyk (default "false")
-    # If enabled, "snyk-token" must be also set.
-    snyk-enable: "false"
-
-    # Snyk CLI version.
-    snyk-version: "1.1298.3"
-
-    # SHA-256 of the downloaded release asset (must match snyk-version)
-    snyk-sha256: "943cffd46891174b0f660a8d20d9e555910a178ca2f74dff98844b38388e49dd"
-
-    # Snyk API Token (default "")
-    # This is necessary if "snyk-enable" is "true".
-    snyk-token: ""
-
-    # Fail step if image has vulnerabilities with a severity above this level (default "low")
-    # Acceptable value is one of (low|medium|high|critical)
-    snyk-severity: low
-
-    # Exclude base image vulnerabilities (default "false")
-    snyk-exclude-base-image-vulns: "false"
 ```
 
 ## FAQ

@@ -1,5 +1,5 @@
 name: Build and Scan Image
-description: Build and scan Dockerfile and container image by hadolint, dockle, trivy, docker scan
+description: Build and scan Dockerfile and container image by hadolint, dockle, trivy
 branding:
   icon: box
   color: blue
@@ -69,30 +69,6 @@ inputs:
     default: os,library
   trivy-ignore-unfixed:
     description: Ignore unfixed vulnerabilities (default "false")
-    required: false
-    default: "false"
-  snyk-enable:
-    description: Enable scanning image by snyk. If enabled, "snyk-token" must be also set. (default "false")
-    required: false
-    default: "false"
-  snyk-version:
-    description: Snyk CLI version.
-    required: false
-    default: "1.1298.3"
-  snyk-sha256:
-    description: SHA-256 of the downloaded snyk release asset. Override together with snyk-version.
-    required: false
-    default: "943cffd46891174b0f660a8d20d9e555910a178ca2f74dff98844b38388e49dd"
-  snyk-token:
-    description: Snyk API Token. This is necessary if "snyk-enable" is "true". (default "")
-    required: false
-    default: ""
-  snyk-severity:
-    description: Fail step if image has vulnerabilities with a severity above this level. Acceptable value is one of (low|medium|high|critical). (default "low")
-    required: false
-    default: low
-  snyk-exclude-base-image-vulns:
-    description: Exclude base image vulnerabilities (default "false")
     required: false
     default: "false"
 runs:
@@ -195,47 +171,4 @@ runs:
       TRIVY_PKG_TYPES: "${{ inputs.trivy-vuln-type }}"
       IMAGE: "${{ inputs.tag }}"
     if: ${{ inputs.trivy-enable == 'true' }}
-    shell: bash
-  - name: Scan image by snyk
-    run: |
-      set -euo pipefail
-      echo "::group::Scan image by snyk"
-
-      # Download and verify snyk before extracting or executing it
-      if [[ ! "${SNYK_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
-        echo "::error::snyk-sha256 must contain exactly 64 hexadecimal characters"
-        exit 1
-      fi
-      SCANNER_DIR="$(mktemp -d "${RUNNER_TEMP}/snyk.XXXXXX")"
-      trap 'rm -rf -- "${SCANNER_DIR}"' EXIT
-      curl -fsSL "${SNYK_RELEASE_ASSET_URL}" -o "${SCANNER_DIR}/snyk"
-      printf '%s  %s\n' "${SNYK_SHA256}" "${SCANNER_DIR}/snyk" | sha256sum --check --strict
-      chmod +x "${SCANNER_DIR}/snyk"
-
-      # Make sure snyk token is passed
-      if [ -z "${SNYK_TOKEN}" ]; then
-        echo "'snyk-token' is necessary if 'snyk-enable' is 'true'"
-        exit 1
-      fi
-
-      # Authenticate
-      "${SCANNER_DIR}/snyk" auth "${SNYK_TOKEN}"
-
-      # Scan image by snyk
-      if [ "${SNYK_EXCLUDE_BASE_IMAGE_VULNS}" == "true" ]; then
-        "${SCANNER_DIR}/snyk" container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" --exclude-base-image-vulns "${IMAGE}"
-      else
-        "${SCANNER_DIR}/snyk" container test --file="${DOCKERFILE}" --severity-threshold="${SNYK_SEVERITY_THRESHOLD}" "${IMAGE}"
-      fi
-
-      echo "::endgroup::"
-    env:
-      SNYK_SHA256: "${{ inputs.snyk-sha256 }}"
-      SNYK_RELEASE_ASSET_URL: "https://github.com/snyk/snyk/releases/download/v${{ inputs.snyk-version }}/snyk-linux"
-      SNYK_EXCLUDE_BASE_IMAGE_VULNS: "${{ inputs.snyk-exclude-base-image-vulns }}"
-      SNYK_SEVERITY_THRESHOLD: "${{ inputs.snyk-severity }}"
-      SNYK_TOKEN: "${{ inputs.snyk-token }}"
-      DOCKERFILE: "${{ inputs.path }}/${{ inputs.dockerfile }}"
-      IMAGE: "${{ inputs.tag }}"
-    if: ${{ inputs.snyk-enable == 'true' }}
     shell: bash
