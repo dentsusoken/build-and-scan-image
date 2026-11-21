@@ -11,5 +11,3 @@ jobs:
         with:
           path: ./testdata
           tag: testdata:${{ github.sha }}
-          snyk-enable: true
-          snyk-token: ${{ secrets.SNYK_TOKEN }}
