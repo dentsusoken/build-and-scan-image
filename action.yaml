@@ -22,11 +22,11 @@ inputs:
   hadolint-version:
     description: Hadolint version.
     required: false
-    default: "2.12.0"
+    default: "2.15.1"
   hadolint-sha256:
     description: SHA-256 of the downloaded hadolint release asset. Override together with hadolint-version.
     required: false
-    default: "56de6d5e5ec427e17b74fa48d51271c7fc0d61244bf5c90e828aab8362d55010"
+    default: "c7187db94eeeeca956519a6af171adc31453941a1e777961f6e680f697c8c507"
   hadolint-severity:
     description: Fail step if rules with a severity above this level are violated. Acceptable value is one of (error|warning|info|style|ignore|none). (default "info")
     required: false
@@ -54,11 +54,11 @@ inputs:
   trivy-version:
     description: Trivy version.
     required: false
-    default: "0.69.3"
+    default: "0.76.2"
   trivy-sha256:
     description: SHA-256 of the downloaded trivy release asset. Override together with trivy-version.
     required: false
-    default: "1816b632dfe529869c740c0913e36bd1629cb7688bd5634f4a858c1d57c88b75"
+    default: "bc0fc726e017b8927a62b2d3531d7a84ee01769daf5c99ed866dced54089fdbf"
   trivy-severity:
     description: Fail step if image has vulnerabilities with a severity same as this level. Acceptable value is comma-separated list of (UNKNOWN|LOW|MEDIUM|HIGH|CRITICAL). (default "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL")
     required: false
@@ -96,7 +96,7 @@ runs:
       echo "::endgroup::"
     env:
       HADOLINT_SHA256: "${{ inputs.hadolint-sha256 }}"
-      HADOLINT_RELEASE_ASSET_URL: "https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-Linux-x86_64"
+      HADOLINT_RELEASE_ASSET_URL: "https://github.com/hadolint/hadolint/releases/download/v${{ inputs.hadolint-version }}/hadolint-linux-x86_64"
       HADOLINT_FAILURE_THRESHOLD: "${{ inputs.hadolint-severity}}"
       DOCKERFILE: "${{ inputs.path }}/${{ inputs.dockerfile }}"
     if: ${{ inputs.hadolint-enable == 'true' }}
